@@ -45,6 +45,7 @@ uninstall:
 	@sudo rm -f /usr/local/bin/chiefmate
 	@sudo systemctl disable chiefmate.service
 	@sudo rm -f $(SYSTEMD_DIR)/chiefmate.service
+	@sudo rm -f /etc/sudoers.d/050_chiefmate
 	@sudo systemctl daemon-reload
 	@echo "chiefmate successful uninstalled ..."
 	@echo "Please remove entry from moonraker.conf"
