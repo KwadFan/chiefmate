@@ -11,6 +11,7 @@ USER = $(shell whoami)
 CUR_DIR = $(shell pwd)
 SERVICE_FILE = $(CUR_DIR)/filesystem/etc/systemd/system/chiefmate.service
 SYSTEMD_DIR = /etc/systemd/system/
+SUDOERS_FILE = $(CUR_DIR)/filesystem/etc/sudoers.d/050_chiefmate
 
 
 all: help
@@ -30,8 +31,11 @@ help:
 	@echo ""
 
 install:
-	@sudo ln -s $(CUR_DIR)/chiefmate /usr/local/bin/
+	@sudo ln -s $(CUR_DIR)/cm-wrapper /usr/local/bin/chiefmate
 	@sudo cp $(SERVICE_FILE) $(SYSTEMD_DIR)
+	@sudo cp $(SUDOERS_FILE) /etc/sudoers.d/
+	@sudo chmod 0440 /etc/sudoers.d/050_chiefmate
+	@sudo chown root:root /etc/sudoers.d/050_chiefmate
 	@sudo systemctl enable chiefmate.service
 	@echo "chiefmate successful installed ..."
 	@echo "Please perform a REBOOT!"

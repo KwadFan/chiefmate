@@ -1,0 +1,10 @@
+#!/bin/bash
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+# wrapper for chiefmate
+CM_BASE_PATH="$(dirname "$(readlink -f "${0}")")"
+exec sudo "${CM_BASE_PATH}"/chiefmate "${@}"

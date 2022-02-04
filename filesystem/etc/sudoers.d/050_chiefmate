@@ -1,0 +1,8 @@
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+# This allows pi to run chiefmate without password
+pi ALL=(ALL) NOPASSWD: /usr/local/bin/chiefmate
