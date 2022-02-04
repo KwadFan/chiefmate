@@ -110,9 +110,9 @@ if [ "$(compare_file /home/pi/klipper_config/mainsail.cfg)" -eq 1 ]; then
     log_msg "Updating mainsail.cfg ..."
     unpack /home/pi/klipper_config/mainsail.cfg pi 0644
 fi
-if [ "$(compare_file /home/pi/klipper_config/moonraker.cfg)" -eq 1 ]; then
+if [ "$(compare_file /home/pi/klipper_config/moonraker.conf)" -eq 1 ]; then
     log_msg "Updating moonraker.conf ..."
-    unpack /home/pi/klipper_config/moonraker.cfg pi 0644
+    unpack /home/pi/klipper_config/moonraker.conf pi 0644
 fi
 
 # Install new Release file
