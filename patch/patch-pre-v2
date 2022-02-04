@@ -24,8 +24,8 @@ rm /home/"${CM_BASE_USER}"/mainsail.zip
 popd &> /dev/null || true
 # Try to Install latest klipper.
 log_msg "Installing and rebuilding Klipper ..."
-KLIPPER_SRC_DIR=/home/${BASE_USER}/klipper
-KLIPPER_PYTHON_DIR=/home/${BASE_USER}/klippy-env
+KLIPPER_SRC_DIR=/home/${CM_BASE_USER}/klipper
+KLIPPER_PYTHON_DIR=/home/${CM_BASE_USER}/klippy-env
 KLIPPER_PYENV_REQ=scripts/klippy-requirements.txt
 KLIPPER_DEPS="wget git gpiod virtualenv python-dev python-matplotlib \
 libffi-dev build-essential libncurses-dev libusb-dev \
