@@ -56,7 +56,7 @@ bash -c \
 -c ${HOME}/klipper_config/moonraker.conf \
 -l ${HOME}/klipper_logs/moonraker.log'
 # install Polkit Rules
-echo_green "Install PolicyKit Rules"
+log_msg "Install PolicyKit Rules"
 sudo -u "${CM_BASE_USER}" sh -c './moonraker/scripts/set-policykit-rules.sh --root'
 # finished
 popd &> /dev/null || exit 1
