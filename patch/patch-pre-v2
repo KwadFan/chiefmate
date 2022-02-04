@@ -48,6 +48,7 @@ popd &> /dev/null || exit 1
 log_msg "Try to update Moonraker ..."
 pushd /home/"${CM_BASE_USER}"/moonraker/ &> /dev/null || exit 1
 sudo -u "${CM_BASE_USER}" git fetch
+sudo -u "${CM_BASE_USER}" git pull
 sudo -u "${CM_BASE_USER}" git reset --hard
 log_msg "Launch moonraker Install script (scripts/install-moonraker.sh)"
 sudo -u "${CM_BASE_USER}" \
