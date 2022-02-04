@@ -37,7 +37,7 @@ KLIPPER_REPO_SHIP=https://github.com/Klipper3d/klipper.git
 sudo apt install --no-install-recommends --yes ${KLIPPER_DEPS}
 pushd /home/"${CM_BASE_USER}" &> /dev/null || exit 1
 sudo rm -rf klipper klippy-env
-git clone "${KLIPPER_REPO_SHIP}" --depth=1
+git clone "${KLIPPER_REPO_SHIP}"
 sudo -u "${CM_BASE_USER}" virtualenv -p python2 "${KLIPPER_PYTHON_DIR}"
 sudo -u "${CM_BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
 log_msg "Try to Install Input Shaper dependency ..."
