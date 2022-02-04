@@ -27,11 +27,43 @@ source "${CM_BASE_PATH}"/libs/config.sh
 source "${CM_BASE_PATH}"/libs/core.sh
 source "${CM_BASE_PATH}"/libs/logging.sh
 
-### MAIN ###
+function help_msg {
+    echo -e "Usage:"
+    echo -e "\t${0} [option]"
+    echo -e "\t\t -f\tForce Update, even it is not needed."
+    echo -e "\t\t -r\tRebuild mainsail stack."
+    echo -e "\t\t -V\tShow Version"
+}
 
+### MAIN ###
 init_log
 check_dep
-updateable
+# Parse Args
+while getopts "fhrV" arg; do
+    case "${arg}" in
+        f )
+            log_msg "Forcing Update ..."
+            break
+        ;;
+        h )
+            help_msg
+            exit 0
+        ;;
+        r )
+            log_msg "Forced rebuild of Mainsail Stack"
+            # shellcheck disable=SC1091
+            source "${CM_BASE_PATH}"/patch/patch-pre-v2
+        ;;
+        V )
+            self_version
+            exit 0
+        ;;
+        \?)
+            updateable
+            break
+        ;;
+    esac
+done
 run_preinstall
 run_install
 run_postinstall
