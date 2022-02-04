@@ -1,0 +1,20 @@
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+[Unit]
+Description=Starts chiefmate - MainsailOS Updater
+Documentation=https://docs.mainsail.xyz/
+DefaultDependencies=no
+RefuseManualStart=yes
+Before=shutdown.target reboot.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart= /usr/local/bin/chiefmate
+
+[Install]
+WantedBy=shutdown.target reboot.target

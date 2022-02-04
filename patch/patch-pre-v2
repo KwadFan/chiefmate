@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+if grep -q "v2" /home/${CM_BASE_USER}/mainsail/.version ;then
+    # This file is intended to update MainsailOS 0.1.0 to latest version
+    log_msg "Your MainsailOS is quite old!"
+    log_msg "Trying to convert to latest Version ..."
+    log_msg "But no promises that everything will work, I'll do my best ..."
+    log_msg "Be patient this will take some time ..."
+    # install dependencies
+    sudo apt install --yes git wget
+    # install latest mainsail
+    MAINSAIL_URL=https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip
+    # download and Install Mainsail Web Frontend
+    log_msg "Installing latest mainsail version ..."
+    pushd /home/"${CM_BASE_USER}" &> /dev/null || exit 1
+    sudo -u "${CM_BASE_USER}" wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
+    sudo -u "${CM_BASE_USER}" unzip -o mainsail.zip -d /home/"${CM_BASE_USER}"/mainsail
+    # cleanup
+    rm /home/"${CM_BASE_USER}"/mainsail.zip
+    popd &> /dev/null || true
+
+    # Try to Install latest klipper.
+    log_msg "Installing and rebuilding Klipper ..."
+    KLIPPER_SRC_DIR=/home/${BASE_USER}/klipper
+    KLIPPER_PYTHON_DIR=/home/${BASE_USER}/klippy-env
+    KLIPPER_PYENV_REQ=scripts/klippy-requirements.txt
+    KLIPPER_DEPS="wget git gpiod virtualenv python-dev python-matplotlib \
+    libffi-dev build-essential libncurses-dev libusb-dev \
+    avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
+    gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0"
+    KLIPPER_REPO_SHIP=https://github.com/Klipper3d/klipper.git
+    # shellcheck disable=SC2086
+    sudo apt install --no-recommends --yes ${KLIPPER_DEPS}
+    pushd /home/"${CM_BASE_USER}" &> /dev/null || exit 1
+    sudo rm -rf klipper klippy-env
+    git clone "${KLIPPER_REPO_SHIP}" --depth=1
+    sudo -u "${CM_BASE_USER}" virtualenv -p python2 "${KLIPPER_PYTHON_DIR}"
+    sudo -u "${CM_BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
+    log_msg "Try to Install Input Shaper dependency ..."
+    log_msg "WARNING: This takes quite a while to finish! Please be patient!"
+    sudo -u "${CM_BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install numpy
+    unpack /etc/systemd/system/klipper.service root 0755
+    popd &> /dev/null || exit 1
+
+    # Try to update moonraker
+    log_msg "Try to update Moonraker ..."
+    pushd /home/"${CM_BASE_USER}"/moonraker/ &> /dev/null || exit 1
+    sudo -u "${CM_BASE_USER}" git fetch
+    sudo -u "${CM_BASE_USER}" git reset --hard
+    log_msg "Launch moonraker Install script (scripts/install-moonraker.sh)"
+    sudo -u "${CM_BASE_USER}" \
+    bash -c \
+    '${HOME}/moonraker/scripts/install-moonraker.sh \
+    -c ${HOME}/klipper_config/moonraker.conf \
+    -l ${HOME}/klipper_logs/moonraker.log'
+    # install Polkit Rules
+    echo_green "Install PolicyKit Rules"
+    sudo -u "${CM_BASE_USER}" sh -c './moonraker/scripts/set-policykit-rules.sh --root'
+    # finished
+    popd &> /dev/null || exit 1
+    log_msg "Please REBOOT after chiefmate has finished all pending operations!"
+fi

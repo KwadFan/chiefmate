@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "**.sh"
+      - "chiefmate"
+      - "libs/**"
+      - "patch/**"
+  pull_request:
+    branches:
+      - "master"
+    paths:
+      - "**.sh"
+      - "chiefmate"
+      - "libs/**"
+      - "patch/**"
+
+name: "Check Script with shellcheck"
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -ax -s bash
+        with:
+          ignore_paths: filesystem
+          format: tty

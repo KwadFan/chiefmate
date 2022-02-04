@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+
+# This file is used to script your updates.
+# Useful functions:
+# static files must be stored in filesystem with same structure as on /
+# unpack [file] [user] [mode]
+# ex: unpack /boot/example.txt root 0644
+# ( This will result in example.txt in /boot with root:root rwxr-xr-x)
+
+# cleanup apt
+log_msg "Cleanup ..."
+sudo apt clean -y
+sudo apt autoclean --yes
+sudo apt autoremove --purge

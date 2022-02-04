@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+
+# This file is used to script your updates.
+# Useful functions:
+# static files must be stored in filesystem with same structure as on /
+# unpack [file] [user] [mode]
+# ex: unpack /boot/example.txt root 0644
+# ( This will result in example.txt in /boot with root:root rwxr-xr-x)
+
+# pre 0.5.0 patches
+if [ -f "/home/${CM_BASE_USER}/mainsail/.version" ] &&
+grep -q "v2" /home/${CM_BASE_USER}/mainsail/.version; then
+    # shellcheck disable=SC1091
+    source "${CM_BASE_PATH}"/patch/patch-pre-v2
+fi
+
+# Remove obsolete files
+if [ -f "/home/${CM_BASE_USER}/klipper_config/gui.json" ]; then
+    log_msg "Removing obsolete gui.json file ..."
+    rm -f "/home/${CM_BASE_USER}/klipper_config/gui.json"
+fi
+if [ -d "/home/${CM_BASE_USER}/CanSerial" ]; then
+    log_msg "Removing obsolete CanSerial directory ..."
+    sudo rm -rf "/home/${CM_BASE_USER}/CanSerial"
+fi
+if [ -f /etc/init.d/klipper ]; then
+    log_msg "Changing obsolete klipper service from SysV to systemd ..."
+    sudo rm -f /etc/init.d/klipper
+    unpack /etc/systemd/system/klipper.service root 0755
+    sudo systemctl daemon-reload
+    sudo systemctl enable klipper.service
+fi
+if [ -f "/boot/mainsail.txt" ]; then
+    log_msg "Moving obsolete mainsail.txt to klipper_config/webcam.txt"
+    cp "/boot/mainsail.txt" "/home/${CM_BASE_USER}/klipper_config/webcam.txt"
+    sudo rm -f "/boot/mainsail.txt"
+fi
+if [ -f /etc/init.d/moonraker ]; then
+    log_msg "Removing obsolete SysV moonraker service ..."
+    sudo rm -f /etc/init.d/moonraker
+fi
+
+# Remove passwordless sudo commands
+if [ -f /etc/sudoers.d/010_pi-nopasswd ]; then
+    log_msg "Reverting passwordless sudo commands ..."
+    sudo sed -e '/^pi/ s/^#*/#/' -i /etc/sudoers.d/010_pi-nopasswd
+fi
+
+# Install python3 packages for IS Preinstall
+log_msg "Installing Input shaper Dependencies ..."
+sudo apt install python3-numpy python3-matplotlib --yes
+
+# Remove Serial Console if present.
+if grep -q 'console=serial0,115200' /boot/cmdline.txt ; then
+    log_msg "Disable Serial Console (tty) by default ..."
+    sudo sed -i 's/console=serial0,115200 //' "/boot/cmdline.txt"
+fi
+if [ "$(compare_file /boot/config.txt)" -eq 1 ]; then
+    log_msg "Install new /boot/config.txt ..."
+    unpack /boot/config.txt root 0755
+fi
+
+# New webcamd version
+if [ "$(compare_file /usr/local/bin/webcamd)" -eq 1 ]; then
+    log_msg "Install new webcamd ..."
+    unpack /usr/local/bin/webcamd root 0755
+    unpack /etc/logrotate.d/webcamd root 0644
+    unpack /etc/systemd/system/webcamd.service root 0755
+    if [ ! -f "/home/${CM_BASE_USER}/klipper_config/webcam.txt" ]; then
+        unpack /home/pi/klipper_config/webcam.txt pi 0644
+    fi
+fi
+
+# Update nginx config
+if [ "$(compare_file /etc/nginx/sites-available/mainsail)" -eq 1 ]; then
+    log_msg "Update nginx configuration ..."
+    unpack /etc/nginx/sites-available/mainsail root 0644
+    unpack /etc/nginx/conf.d/common_vars.conf root 0644
+    unpack /etc/nginx/conf.d/upstreams.conf root 0644
+fi
+
+# Update logrotate
+if [ "$(compare_file /etc/logrotate.d/rsyslog)" -eq 1 ]; then
+    log_msg "Updating logrotate configuration ..."
+    unpack /etc/logrotate.d/rsyslog root 0644
+fi
+
+# Update Swapfile
+if [ "$(compare_file /etc/dphys-swapfile)" -eq 1 ]; then
+    log_msg "Updating logrotate configuration ..."
+    unpack /etc/dphys-swapfile root 0644
+fi
+
+# Remove mnrkrsudo ( monnraker's sudo_fix.sh )
+if [ -f "/etc/sudoers.d/020-sudo-for-moonraker" ]; then
+    log_msg "Removing obsolete moonrakers sudo_fix ... /r"
+    rm -f /etc/sudoers.d/020-sudo-for-moonraker
+    sed -i '/mnrkrsudo/d' /etc/group
+fi
+
+# update config files
+# home of @alexz :)
+if [ "$(compare_file /home/pi/klipper_config/mainsail.cfg)" -eq 1 ]; then
+    log_msg "Updating mainsail.cfg ..."
+    unpack /home/pi/klipper_config/mainsail.cfg pi 0644
+fi
+if [ "$(compare_file /home/pi/klipper_config/moonraker.cfg)" -eq 1 ]; then
+    log_msg "Updating moonraker.conf ..."
+    unpack /home/pi/klipper_config/moonraker.cfg pi 0644
+fi
+
+# Install new Release file
+install_release

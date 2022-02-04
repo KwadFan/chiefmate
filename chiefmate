@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# chiefmate - MainsailOS Updater
+#
+# Copyright (C) 2021 Stephan Wendel <me@stephanwe.de>
+#
+# This file may be distributed under the terms of the GNU GPLv3 license
+
+# shellcheck enable=require-variable-braces
+
+# DEBUG
+# set -x
+# set -e
+
+
+# Set Base Path
+CM_BASE_PATH="$(dirname "$(readlink -f "${0}")")"
+
+# noninteractive check
+if [ -z "${DEBIAN_FRONTEND}" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+
+# Import Librarys
+# shellcheck source-path=SCRIPTDIR/libs/
+source "${CM_BASE_PATH}"/libs/config.sh
+source "${CM_BASE_PATH}"/libs/core.sh
+source "${CM_BASE_PATH}"/libs/logging.sh
+
+### MAIN ###
+
+init_log
+check_dep
+updateable
+run_preinstall
+run_install
+run_postinstall
+finish_msg
+
+exit 0
