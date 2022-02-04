@@ -33,7 +33,7 @@ avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eab
 gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0"
 KLIPPER_REPO_SHIP=https://github.com/Klipper3d/klipper.git
 # shellcheck disable=SC2086
-sudo apt install --no-recommends --yes ${KLIPPER_DEPS}
+sudo apt install --no-install-recommends --yes ${KLIPPER_DEPS}
 pushd /home/"${CM_BASE_USER}" &> /dev/null || exit 1
 sudo rm -rf klipper klippy-env
 git clone "${KLIPPER_REPO_SHIP}" --depth=1
