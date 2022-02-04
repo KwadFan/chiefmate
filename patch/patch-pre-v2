@@ -22,6 +22,7 @@ sudo -u "${CM_BASE_USER}" unzip -o mainsail.zip -d /home/"${CM_BASE_USER}"/mains
 # cleanup
 rm /home/"${CM_BASE_USER}"/mainsail.zip
 popd &> /dev/null || true
+
 # Try to Install latest klipper.
 log_msg "Installing and rebuilding Klipper ..."
 KLIPPER_SRC_DIR=/home/${CM_BASE_USER}/klipper
@@ -44,6 +45,7 @@ log_msg "WARNING: This takes quite a while to finish! Please be patient!"
 sudo -u "${CM_BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install numpy
 unpack /etc/systemd/system/klipper.service root 0755
 popd &> /dev/null || exit 1
+
 # Try to update moonraker
 log_msg "Try to update Moonraker ..."
 pushd /home/"${CM_BASE_USER}"/moonraker/ &> /dev/null || exit 1
@@ -58,7 +60,7 @@ bash -c \
 -l ${HOME}/klipper_logs/moonraker.log'
 # install Polkit Rules
 log_msg "Install PolicyKit Rules"
-sudo -u "${CM_BASE_USER}" sh -c './moonraker/scripts/set-policykit-rules.sh --root'
+sudo -u "${CM_BASE_USER}" sh -c '${HOME}/moonraker/scripts/set-policykit-rules.sh --root'
 # finished
 popd &> /dev/null || exit 1
 log_msg "Please REBOOT after chiefmate has finished all pending operations!"
