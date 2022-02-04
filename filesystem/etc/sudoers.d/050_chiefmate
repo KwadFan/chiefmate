@@ -5,4 +5,4 @@
 # This file may be distributed under the terms of the GNU GPLv3 license
 
 # This allows pi to run chiefmate without password
-pi ALL = NOPASSWD: /usr/local/bin/chiefmate
+pi ALL=(ALL) NOPASSWD: /usr/local/bin/chiefmate
