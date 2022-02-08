@@ -31,7 +31,7 @@ help:
 	@echo ""
 
 install:
-	@sudo ln -s $(CUR_DIR)/cm-wrapper /usr/local/bin/chiefmate
+	@sudo ln -s $(CUR_DIR)/chiefmate /usr/local/bin/chiefmate
 	@sudo cp $(SERVICE_FILE) $(SYSTEMD_DIR)
 	@sudo cp $(SUDOERS_FILE) /etc/sudoers.d/
 	@sudo chmod 0440 /etc/sudoers.d/050_chiefmate
