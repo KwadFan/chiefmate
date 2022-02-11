@@ -31,6 +31,8 @@ help:
 	@echo ""
 
 install:
+	@echo "Some Parts need 'sudo' privileges."
+	@echo "You'll be asked for password, if needed."
 	@sudo ln -s $(CUR_DIR)/chiefmate /usr/local/bin/chiefmate
 	@sudo cp $(SERVICE_FILE) $(SYSTEMD_DIR)
 	@sudo cp $(SUDOERS_FILE) /etc/sudoers.d/
