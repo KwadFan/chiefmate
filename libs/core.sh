@@ -93,9 +93,11 @@ function run_postinstall {
 
 # compares files and if matching returns 0 else 1
 function compare_file {
-    local path
+    local path new old
     path="${1}"
-    if [ -f "${path}" ] && [ -n "$(diff "${path}" "${CM_FILE_SYS}${path}")" ]; then
+    new="$(sha256sum "${CM_FILE_SYS}""${path}" | awk '{print $1}')"
+    old="$(sha256sum "${path}" | awk '{print $1}')"
+    if [ -f "${path}" ] && [ "${old}" != "${new}" ]; then
         echo "1"
     else
         echo "0"
