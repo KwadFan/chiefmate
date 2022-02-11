@@ -9,7 +9,7 @@ Description=Starts chiefmate - MainsailOS Updater
 Documentation=https://docs.mainsail.xyz/
 DefaultDependencies=no
 RefuseManualStart=yes
-Before=shutdown.target reboot.target
+Before=reboot.target
 
 [Service]
 Type=oneshot
@@ -17,4 +17,4 @@ RemainAfterExit=yes
 ExecStart= /usr/local/bin/chiefmate
 
 [Install]
-WantedBy=shutdown.target reboot.target
+WantedBy=reboot.target
