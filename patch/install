@@ -14,7 +14,8 @@
 # ( This will result in example.txt in /boot with root:root rwxr-xr-x)
 
 # pre 0.4.0 patches
-if [ ! -f "/home/${CM_BASE_USER}/mainsail/.version" ]; then
+if [ -f /etc/mainsailos_version ] &&
+grep -q "0.[1-4].0" /etc/mainsailos_version; then
     # shellcheck disable=SC1091
     source "${CM_BASE_PATH}"/patch/patch-pre-v2
 fi
