@@ -47,7 +47,8 @@ if [ -f /etc/init.d/moonraker ]; then
 fi
 
 # Remove passwordless sudo commands
-if [ -f /etc/sudoers.d/010_pi-nopasswd ]; then
+if [ -f /etc/sudoers.d/010_pi-nopasswd ] &&
+sudo grep -q "^pi" /etc/sudoers.d/010_pi-nopasswd; then
     log_msg "Reverting passwordless sudo commands ..."
     sudo sed -e '/^pi/ s/^#*/#/' -i /etc/sudoers.d/010_pi-nopasswd
 fi
