@@ -18,3 +18,6 @@ log_msg "Cleanup ..."
 sudo apt clean -y
 sudo apt autoclean --yes
 sudo apt autoremove --purge
+
+# reload daemons
+sudo systemctl daemon-reload
