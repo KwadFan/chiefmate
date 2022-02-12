@@ -157,7 +157,7 @@ function apt_update_skip {
         # force update
         log_msg "APT Cache needs to be updated!"
         log_msg "Running 'apt update' ..."
-        apt update --allow-releaseinfo-change | log_output
+        sudo apt update --allow-releaseinfo-change | log_output
     fi
 }
 
@@ -188,7 +188,7 @@ function check_install_pkgs {
     if [ "${#missing_pkgs[@]}" -ne 0 ]; then
         log_msg "${#missing_pkgs[@]} missing Packages..."
         log_msg "Installing ${missing_pkgs[*]}"
-        apt install --yes "${missing_pkgs[@]}"
+        sudo apt install --yes "${missing_pkgs[@]}"
     else
         log_msg "No Dependencies missing... [SKIPPED]"
     fi
@@ -196,7 +196,7 @@ function check_install_pkgs {
 
 function full_upgrade {
     log_msg "Check available System Upgrades ..."
-    if [ -n "$(apt list --upgradeable 2> /dev/null | sed '1d;/WARNING/d')" ]; then
+    if [ -n "$(sudo apt list --upgradeable 2> /dev/null | sed '1d;/WARNING/d')" ]; then
         log_msg "System Upgrades available, running full upgrade ..."
         sudo apt full-upgrade --yes
     else

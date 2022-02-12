@@ -34,4 +34,4 @@ fi
 
 CM_OS_PATCH="0.6.1"
 
-CM_PKG_LIST="python3-numpy python3-matplotlib policykit packagekit"
+CM_PKG_LIST="python3-numpy python3-matplotlib policykit-1 packagekit"
