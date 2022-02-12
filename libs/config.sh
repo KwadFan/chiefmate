@@ -33,3 +33,5 @@ else
 fi
 
 CM_OS_PATCH="0.6.1"
+
+IS_PREINSTALL_PKG="python3-numpy python3-matplotlib"
