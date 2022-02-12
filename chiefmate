@@ -39,8 +39,13 @@ function help_msg {
 init_log
 check_dep
 # Parse Args
-while getopts "fhrV" arg; do
+while getopts "cfhrV" arg; do
     case "${arg}" in
+        c )
+            log_msg "Removing Logfile ..."
+            clean_log
+            exit 0
+        ;;
         f )
             log_msg "Forcing Update ..."
             break

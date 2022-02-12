@@ -24,6 +24,12 @@ function init_log {
     log_msg "Mainsail OS Version: ${CM_OS_VERSION} (${CM_OS_PATCH})"
 }
 
+# Remove existing Log
+function clean_log {
+    sudo rm -f "${CM_LOG_PATH}"
+    echo -e "... Done!"
+}
+
 # reusable log message
 # usage: log_msg "your message will be displayed and written to log"
 function log_msg {
