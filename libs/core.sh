@@ -61,7 +61,7 @@ function updateable {
     else
         noupdate_msg
         goodbye_msg
-        # exit 0
+        exit 0
     fi
 }
 

@@ -37,39 +37,47 @@ function help_msg {
 }
 
 ### MAIN ###
-init_log
-check_dep
 # Parse Args
-while getopts "cfhrV" arg; do
-    case "${arg}" in
-        c )
+if [ -z "${1}" ]; then
+    init_log
+    check_dep
+    updateable
+else
+    case "${1}" in
+        "-c" )
+            init_log
+            check_dep
             log_msg "Removing Logfile ..."
             clean_log
             exit 0
         ;;
-        f )
+        "-f" )
+            init_log
+            check_dep
             log_msg "Forcing Update ..."
-            break
         ;;
-        h )
+        "-h" )
             help_msg
             exit 0
         ;;
-        r )
-            log_msg "Forced rebuild of Mainsail Stack"
+        "-r" )
+            init_log
+            check_dep
+            log_msg "Forced rebuild of Mainsail Stack ..."
             # shellcheck disable=SC1091
             source "${CM_BASE_PATH}"/patch/patch-pre-v2
         ;;
-        V )
+        "-V" )
             self_version
             exit 0
         ;;
-        \?)
-            updateable
-            break
+        * )
+            echo -e "ERROR: Unknown Option: ${1}\n"
+            help_msg
+            exit 1
         ;;
-    esac
-done
+        esac
+fi
 run_preinstall
 run_install
 run_postinstall

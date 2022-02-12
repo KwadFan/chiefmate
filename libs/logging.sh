@@ -27,7 +27,8 @@ function init_log {
 # Remove existing Log
 function clean_log {
     sudo rm -f "${CM_LOG_PATH}"
-    echo -e "... Done!"
+    echo -e "${CM_LOG_PREFIX} ... Done!"
+    echo -e "${CM_LOG_PREFIX} -----------------------------------------------------"
 }
 
 # reusable log message
