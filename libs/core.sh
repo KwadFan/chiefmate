@@ -199,6 +199,8 @@ function full_upgrade {
     if [ -n "$(apt list --upgradeable 2> /dev/null | sed '1d;/WARNING/d')" ]; then
         log_msg "System Upgrades available, running full upgrade ..."
         sudo apt full-upgrade --yes
+    else
+        log_msg "No System Upgrades available ... [SKIPPED]"
     fi
 }
 
