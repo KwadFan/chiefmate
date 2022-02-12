@@ -174,14 +174,14 @@ function check_install_pkgs {
     local missing_pkgs
     for dep in ${1}; do
         # if in apt cache and not installed add to array
-        if [ "$(is_in_apt ${dep})" -gt 0 ] && [ "$(is_installed ${dep})" -eq 1 ]; then
+        if [ "$(is_in_apt "${dep}")" -gt 0 ] && [ "$(is_installed "${dep}")" -eq 1 ]; then
             missing_pkgs+=("${dep}")
         #if in apt cache and installed
-        elif [ "$(is_in_apt ${dep})" -gt 0 ] && [ "$(is_installed ${dep})" -eq 0 ]; then
-            log_msg "Package ${dep} already installed. [SKIPPED]"
+        elif [ "$(is_in_apt "${dep}")" -gt 0 ] && [ "$(is_installed "${dep}")" -eq 0 ]; then
+            log_msg "Package '${dep}' already installed. [SKIPPED]"
         # if not in apt cache and not installed
         else
-            log_msg "Missing Package ${dep} not found in Apt Repository. [SKIPPED]"
+            log_msg "Missing Package '${dep}' not found in Apt Repository. [SKIPPED]"
         fi
     done
     # if missing pkgs install missing else skip that.
