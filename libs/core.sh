@@ -144,3 +144,61 @@ function install_release {
         unpack /etc/mainsailos-release root 0644
     fi
 }
+
+# APT Helper Functions
+# Skip apt update if Cache not older than 1 Hour.
+function apt_update_skip {
+    log_msg "Check APT for updates ..."
+    if [ -f "/var/cache/apt/pkgcache.bin" ] && \
+    [ "$(($(date +%s)-$(stat -c %Y /var/cache/apt/pkgcache.bin)))" -lt "3600" ];
+    then
+        log_msg "APT Cache needs no update! [SKIPPED]"
+    else
+        # force update
+        log_msg "APT Cache needs to be updated!"
+        log_msg "Running 'apt update' ..."
+        apt update --allow-releaseinfo-change | log_output
+    fi
+}
+
+function is_installed {
+    dpkg-query -W | grep -q "${1}" && echo 0 || echo 1
+}
+
+function is_in_apt {
+    apt-cache policy "${1}" | wc -l
+}
+
+function check_install_pkgs {
+    ## Build Array from Var
+    local missing_pkgs
+    for dep in ${1}; do
+        # if in apt cache and not installed add to array
+        if [ "$(is_in_apt ${dep})" -gt 0 ] && [ "$(is_installed ${dep})" -eq 1 ]; then
+            missing_pkgs+=("${dep}")
+        #if in apt cache and installed
+        elif [ "$(is_in_apt ${dep})" -gt 0 ] && [ "$(is_installed ${dep})" -eq 0 ]; then
+            log_msg "Package ${dep} already installed. [SKIPPED]"
+        # if not in apt cache and not installed
+        else
+            log_msg "Missing Package ${dep} not found in Apt Repository. [SKIPPED]"
+        fi
+    done
+    # if missing pkgs install missing else skip that.
+    if [ "${#missing_pkgs[@]}" -ne 0 ]; then
+        log_msg "${#missing_pkgs[@]} missing Packages..."
+        log_msg "Installing ${missing_pkgs[*]}"
+        apt install --yes "${missing_pkgs[@]}"
+    else
+        log_msg "No Dependencies missing... [SKIPPED]"
+    fi
+}
+
+function full_upgrade {
+    log_msg "Check available System Upgrades ..."
+    if [ -n "$(apt list --upgradeable 2> /dev/null | sed '1d;/WARNING/d')" ]; then
+        log_msg "System Upgrades available, running full upgrade ..."
+        sudo apt full-upgrade --yes
+    fi
+}
+

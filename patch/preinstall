@@ -13,10 +13,7 @@
 # ex: unpack /boot/example.txt root 0644
 # ( This will result in example.txt in /boot with root:root rwxr-xr-x)
 
-
-# update first
-log_msg "Performing System Upgrade via APT ..."
 # run apt update first
 apt_update_skip
 # perform full-upgrade
-sudo apt full-upgrade --yes | log_output
+full_upgrade

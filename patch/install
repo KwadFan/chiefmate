@@ -53,9 +53,9 @@ sudo grep -q "^pi" /etc/sudoers.d/010_pi-nopasswd; then
     sudo sed -e '/^pi/ s/^#*/#/' -i /etc/sudoers.d/010_pi-nopasswd
 fi
 
-# Install python3 packages for IS Preinstall
-log_msg "Installing Input shaper Dependencies ..."
-sudo apt install python3-numpy python3-matplotlib --yes
+# Install dependend packages
+log_msg "Checking missing Dependencys ..."
+check_install_pkgs "${CM_PKG_LIST}"
 
 # Remove Serial Console if present.
 if grep -q 'console=serial0,115200' /boot/cmdline.txt ; then
