@@ -30,6 +30,7 @@ source "${CM_BASE_PATH}"/libs/logging.sh
 function help_msg {
     echo -e "Usage:"
     echo -e "\t${0} [option]"
+    echo -e "\t\t -c\tRemove existing Logfile."
     echo -e "\t\t -f\tForce Update, even it is not needed."
     echo -e "\t\t -r\tRebuild mainsail stack."
     echo -e "\t\t -V\tShow Version"
