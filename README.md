@@ -18,6 +18,23 @@ after that add
 
 to your **moonraker.conf**
 
+## User specific setup
+
+If you dont want to update specific files,\
+simply add a file named
+
+    .cmignore
+
+to your klipper_config Folder.
+
+In that file, put the full path to the file that should not be updated.\
+_for example:_
+
+    /home/pi/klipper_config/mainsail.cfg
+
+This will ignore updating that file and places new Versions\
+with a .new extension to its location.
+
 ---
 
 ## logging
