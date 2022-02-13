@@ -104,6 +104,17 @@ function compare_file {
     fi
 }
 
+# ignore file
+# if path found in file, returns 0 else 1
+function ignore_unpack {
+    local path
+    path="${1}"
+    if [ -f "${CM_IGN_FILE}" ]; then
+        grep -qx "${path}" "${CM_IGN_FILE}" && return 0 || return 1
+    fi
+}
+
+# unpack files
 function unpack() {
     local bin path owner mode cmd
     bin="$(command -v install)"
@@ -111,7 +122,7 @@ function unpack() {
     owner="${2}"
     mode="${3}"
     # default flags, see 'man install'
-    cmd=(-p -b -S -"$(date +%F)")
+    cmd=(-b -S -"$(date +%F)")
     # prepare args
     if [ "${owner}" == "root" ]; then
         cmd+=(-g root -o root)
@@ -120,12 +131,20 @@ function unpack() {
     else
         log_msg "No valid user set ... [SKIPPED]"
     fi
-    # add mode, if given
+    # add mode, if given else 0644
     if [ "${#}" -gt 2 ] && [ -n "${mode}" ]; then
         cmd+=(-m "${mode}")
+    else
+        cmd+=(-m 0644)
     fi
     # add path
-    cmd+=( "${CM_FILE_SYS}""${path}" "${path}" )
+    if [ "$(ignore_unpack "${path}")" == "0" ]; then
+        log_msg "File ${path} has match in .cmignore"
+        log_msg "Copying to location with '${CM_IGN_SUFFIX}' extention"
+        cmd+=( "${CM_FILE_SYS}""${path}" "${path}""${CM_IGN_SUFFIX}" )
+    else
+        cmd+=( "${CM_FILE_SYS}""${path}" "${path}" )
+    fi
     # run
     if [ "${owner}" == "root" ]; then
         sudo "${bin}" "${cmd[@]}"

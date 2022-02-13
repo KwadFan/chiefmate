@@ -11,6 +11,12 @@
 # Dependencies
 CM_DEPENDS="install diff git"
 
+# User Ignore File
+CM_IGN_FILE="/home/pi/klipper_config/.cmignore"
+
+# Copy suffix
+CM_IGN_SUFFIX=".new"
+
 # Logging
 CM_LOG_PATH="/home/pi/klipper_logs/chiefmate.log"
 CM_LOG_PREFIX="$(date +'[%D %T]') chiefmate:"
