@@ -101,7 +101,7 @@ fi
 # Remove mnrkrsudo ( monnraker's sudo_fix.sh )
 if [ -f "/etc/sudoers.d/020-sudo-for-moonraker" ]; then
     log_msg "Removing obsolete moonrakers sudo_fix ... /r"
-    rm -f /etc/sudoers.d/020-sudo-for-moonraker
+    sudo rm -f /etc/sudoers.d/020-sudo-for-moonraker
     sed -i '/mnrkrsudo/d' /etc/group
 fi
 
